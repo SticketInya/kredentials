@@ -2,41 +2,34 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/SticketInya/kredentials/formatter"
 	"github.com/SticketInya/kredentials/kredentials"
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(useCmd)
+func NewUseCommand(cli *kredentials.KredentialsCli) *cobra.Command {
+	useCmd := &cobra.Command{
+		Use:   "use",
+		Short: "use the selected kredential as kubernetes config",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runUse(cli, args)
+		},
+	}
+
+	return useCmd
 }
 
-var useCmd = &cobra.Command{
-	Use:   "use",
-	Short: "use the selected kredential as kubernetes config",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runUse,
-}
-
-func runUse(cmd *cobra.Command, args []string) error {
-	configName := args[0]
-
-	if configName == "" {
+func runUse(cli *kredentials.KredentialsCli, args []string) error {
+	kredentialName := args[0]
+	if kredentialName == "" {
 		return fmt.Errorf("kredential name cannot be empty")
 	}
 
-	kred, err := kredentials.RetrieveKredentialFromStorage(configName)
-	if err != nil {
-		return fmt.Errorf("retrieving '%s' from storage %w", configName, err)
+	if err := cli.Manager.UseKredential(kredentialName); err != nil {
+		return fmt.Errorf("setting active kubernetes config: %w", err)
 	}
 
-	if err = kred.SetAsKubernetesConfig(); err != nil {
-		return fmt.Errorf("setting '%s' as kubernetes config %w", configName, err)
-	}
-
-	w := formatter.NewStructuredPrinter(os.Stdout)
-	w.Printf("Now using '%s' as kubernetes config!\n", kred.Name)
+	cli.Printer.Printf("Now using '%s' as kubernetes config!\n", kredentialName)
 	return nil
 }

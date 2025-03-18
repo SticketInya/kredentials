@@ -1,22 +1,22 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/SticketInya/kredentials/kredentials"
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "kredentials",
-	Short: "kredentials is a cli tool for managing kubernetes configs",
-	Long:  "kredentials is a cli tool for managing kubernetes configs",
-	Run:   func(cmd *cobra.Command, args []string) {},
-}
-
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintf(os.Stderr, "Oops. An error while executing kredentials '%s'\n", err)
-		os.Exit(1)
+func NewRootCmd(cli *kredentials.KredentialsCli) *cobra.Command {
+	rootCmd := &cobra.Command{
+		Use:   "kredentials",
+		Short: "kredentials is a cli tool for managing kubernetes configs",
+		Long:  "kredentials is a cli tool for managing kubernetes configs",
+		Run:   func(cmd *cobra.Command, args []string) {},
 	}
+
+	rootCmd.AddCommand(NewAddCmd(cli))
+	rootCmd.AddCommand(NewListCmd(cli))
+	rootCmd.AddCommand(NewUseCommand(cli))
+	rootCmd.AddCommand(NewDeleteCmd(cli))
+
+	return rootCmd
 }

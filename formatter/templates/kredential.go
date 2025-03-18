@@ -1,6 +1,8 @@
 package templates
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type KredentialNodeTemplate struct {
 	Name     string

@@ -1,47 +1,45 @@
 package cmd
 
 import (
-	"os"
 	"sort"
 	"strings"
 
-	"github.com/SticketInya/kredentials/formatter"
 	"github.com/SticketInya/kredentials/formatter/templates"
 	"github.com/SticketInya/kredentials/kredentials"
+	"github.com/SticketInya/kredentials/models"
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(listCmd)
+func NewListCmd(cli *kredentials.KredentialsCli) *cobra.Command {
+	listCmd := &cobra.Command{
+		Use:   "list",
+		Short: "list all the kredentials",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runList(cli, args)
+		},
+	}
+
+	return listCmd
 }
 
 const defaultListSeparator string = ","
 
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "list all the kredentials",
-	RunE:  runList,
-}
-
-func runList(cmd *cobra.Command, args []string) error {
-	kreds, err := kredentials.ReadKredentials(kredentials.DefaultConfigStorageDir)
+func runList(cli *kredentials.KredentialsCli, args []string) error {
+	kreds, err := cli.Manager.ListKredentials()
 	if err != nil {
-		// TODO: check if returning error here is more appropriate
-		return nil
+		return err
 	}
 
-	printer := formatter.NewStructuredPrinter(os.Stdout)
-
 	if len(kreds) == 0 {
-		printer.Println("No kredentials found")
+		cli.Printer.Println("No kredentials found")
 		return nil
 	}
 
 	nodeList := buildKredentialNodeList(kreds)
-	return printer.StructuredPrint(nodeList)
+	return cli.Printer.StructuredPrint(nodeList)
 }
 
-func buildKredentialNodeList(kreds []*kredentials.Kredential) templates.KredentialNodeListTemplate {
+func buildKredentialNodeList(kreds []*models.Kredential) templates.KredentialNodeListTemplate {
 	var data templates.KredentialNodeListTemplate
 
 	for _, kred := range kreds {
