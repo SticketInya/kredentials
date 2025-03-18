@@ -15,7 +15,7 @@ func init() {
 
 var useCmd = &cobra.Command{
 	Use:   "use",
-	Short: "use the selected kubernetes config",
+	Short: "use the selected kredential as kubernetes config",
 	Args:  cobra.ExactArgs(1),
 	RunE:  runUse,
 }
@@ -24,7 +24,7 @@ func runUse(cmd *cobra.Command, args []string) error {
 	configName := args[0]
 
 	if configName == "" {
-		return fmt.Errorf("config name cannot be empty")
+		return fmt.Errorf("kredential name cannot be empty")
 	}
 
 	kred, err := kredentials.RetrieveKredentialFromStorage(configName)

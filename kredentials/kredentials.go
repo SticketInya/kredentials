@@ -132,3 +132,17 @@ func RetrieveKredentialFromStorage(name string) (*Kredential, error) {
 	// TODO: check if we should handle more than 1 results
 	return kreds[0], nil
 }
+
+func DeleteKredentialFromStorage(name string) error {
+	storageDir, err := fileutil.ExpandPath(getConfigStorageDir())
+	if err != nil {
+		return fmt.Errorf("expanding config storage directory %w", err)
+	}
+
+	targetPath := filepath.Join(storageDir, name)
+	if err = os.Remove(targetPath); err != nil {
+		return fmt.Errorf("deleting kredential at '%s' %w", targetPath, err)
+	}
+
+	return nil
+}
