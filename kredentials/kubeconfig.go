@@ -13,6 +13,7 @@ import (
 const (
 	kubernetesConfigFilePermissions = 0755
 	kubernetesConfigFileName        = "config"
+	kubernetesConfigDirectory       = "~/.kube/"
 )
 
 type KubernetesConfig = api.Config
@@ -47,4 +48,8 @@ func (k *Kredential) WriteKubernetesConfig(path string, name string) error {
 		return fmt.Errorf("writing config '%s' to '%s' %w", k.Name, newFilePath, err)
 	}
 	return nil
+}
+
+func (k *Kredential) SetAsKubernetesConfig() error {
+	return k.WriteKubernetesConfig(kubernetesConfigDirectory, kubernetesConfigFileName)
 }

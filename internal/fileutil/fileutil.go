@@ -17,3 +17,18 @@ func ExpandPath(path string) (string, error) {
 	}
 	return path, nil
 }
+
+// Checks if a file (not a directory) can be found at the given path
+// Returns 'false' for directories even if they exists.
+func CheckFileExists(path string) bool {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+
+	if fileInfo.IsDir() {
+		return false
+	}
+
+	return true
+}

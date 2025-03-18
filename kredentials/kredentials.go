@@ -24,13 +24,13 @@ func NewKredential(name string) *Kredential {
 	}
 }
 
-func (k *Kredential) getConfigStorageDir() string {
+func getConfigStorageDir() string {
 	// TODO: Add env support
 	return DefaultConfigStorageDir
 }
 
 func (k *Kredential) StoreKredential(path string) error {
-	destDir, err := fileutil.ExpandPath(k.getConfigStorageDir())
+	destDir, err := fileutil.ExpandPath(getConfigStorageDir())
 	if err != nil {
 		return fmt.Errorf("expandig config storage directory %w", err)
 	}
@@ -60,7 +60,8 @@ func ReadKredentials(path string) ([]*Kredential, error) {
 	}
 
 	if !pathInfo.IsDir() {
-		kred, err := readKredential(destPath)
+		kred := NewKredential(filepath.Base(destPath))
+		err := kred.readKredential(destPath)
 		if err != nil {
 			return kreds, fmt.Errorf("failed to read kredential %w", err)
 		}
@@ -78,8 +79,9 @@ func ReadKredentials(path string) ([]*Kredential, error) {
 			continue
 		}
 
+		kred := NewKredential(file.Name())
 		targetFilePath := filepath.Join(destPath, file.Name())
-		kred, err := readKredential(targetFilePath)
+		err := kred.readKredential(targetFilePath)
 		if err != nil {
 			// TODO: properly handle error
 			fmt.Printf("cannot read file '%s' %s", targetFilePath, err)
@@ -92,13 +94,41 @@ func ReadKredentials(path string) ([]*Kredential, error) {
 	return kreds, nil
 }
 
-func readKredential(path string) (*Kredential, error) {
-	name := filepath.Base(path)
+func (k *Kredential) readKredential(path string) error {
+	err := k.ReadKubernetesConfig(path)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
-	kred := NewKredential(name)
-	err := kred.ReadKubernetesConfig(path)
+func CheckKredentialInStorage(name string) bool {
+	configDir, err := fileutil.ExpandPath(getConfigStorageDir())
+	if err != nil {
+		return false
+	}
+
+	return fileutil.CheckFileExists(filepath.Join(configDir, name))
+}
+
+func RetrieveKredentialFromStorage(name string) (*Kredential, error) {
+	if !CheckKredentialInStorage(name) {
+		return nil, fmt.Errorf("config '%s' does not exists", name)
+	}
+
+	storageDir, err := fileutil.ExpandPath(getConfigStorageDir())
+	if err != nil {
+		return nil, fmt.Errorf("expanding config storage directory %w", err)
+	}
+
+	kreds, err := ReadKredentials(filepath.Join(storageDir, name))
 	if err != nil {
 		return nil, err
 	}
-	return kred, nil
+	if len(kreds) == 0 {
+		return nil, fmt.Errorf("retrieved 0 kredentials")
+	}
+
+	// TODO: check if we should handle more than 1 results
+	return kreds[0], nil
 }
