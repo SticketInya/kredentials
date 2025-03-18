@@ -11,10 +11,6 @@ import (
 	"github.com/SticketInya/kredentials/models"
 )
 
-const (
-	storageDirectoryPermissions os.FileMode = 0755
-)
-
 type KredentialStore interface {
 	Store(kred *models.Kredential) error
 	Load(name string) (*models.Kredential, error)
@@ -23,7 +19,15 @@ type KredentialStore interface {
 }
 
 type FileKredentialStore struct {
-	storageDirectory string
+	storageDirectory      string
+	storageDirPermissions os.FileMode
+}
+
+func NewFileKredentialStore(storageDirectory string, storageDirPermissions os.FileMode) *FileKredentialStore {
+	return &FileKredentialStore{
+		storageDirectory:      storageDirectory,
+		storageDirPermissions: storageDirPermissions,
+	}
 }
 
 func (s *FileKredentialStore) getAndExpandStorageDirectory() (string, error) {
@@ -42,7 +46,7 @@ func (s *FileKredentialStore) Store(kred *models.Kredential) error {
 	}
 
 	// ensure the directory exists
-	if err = os.MkdirAll(storageDir, storageDirectoryPermissions); err != nil {
+	if err = os.MkdirAll(storageDir, s.storageDirPermissions); err != nil {
 		return fmt.Errorf("creating storage directory: %w", err)
 	}
 
