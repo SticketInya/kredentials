@@ -44,7 +44,7 @@ func runAdd(cmd *cobra.Command, args []string) error {
 	if err = kred.StoreKredential(kredentials.DefaultConfigStorageDir); err != nil {
 		return err
 	}
-	fmt.Printf("kredential '%s' added!", name)
+	fmt.Printf("kredential '%s' added!\n", name)
 
 	return nil
 }
