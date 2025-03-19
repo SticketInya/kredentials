@@ -1,4 +1,4 @@
-package kubernetes_util
+package kubernetesutil
 
 import (
 	"fmt"

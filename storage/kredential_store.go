@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/SticketInya/kredentials/internal/fileutil"
-	"github.com/SticketInya/kredentials/internal/kubernetes_util"
+	"github.com/SticketInya/kredentials/internal/kubernetesutil"
 	"github.com/SticketInya/kredentials/models"
 )
 
@@ -57,7 +57,7 @@ func (s *FileKredentialStore) Store(kred *models.Kredential) error {
 	}
 	defer file.Close()
 
-	_, err = kubernetes_util.WriteKubernetesConfig(file, *kred.Config)
+	_, err = kubernetesutil.WriteKubernetesConfig(file, *kred.Config)
 	if err != nil {
 		return fmt.Errorf("writing '%s' file %w", filename, err)
 	}
@@ -91,7 +91,7 @@ func (s *FileKredentialStore) Load(name string) (*models.Kredential, error) {
 		return nil, fmt.Errorf("reading file content '%s': %w", filename, err)
 	}
 
-	config, err := kubernetes_util.ReadKubernetesConfig(data)
+	config, err := kubernetesutil.ReadKubernetesConfig(data)
 	if err != nil {
 		return nil, err
 	}

@@ -18,8 +18,8 @@ func ExpandPath(path string) (string, error) {
 	return path, nil
 }
 
-// Checks if a file (not a directory) can be found at the given path
-// Returns 'false' for directories even if they exists.
+// CheckFileExists checks if a file (not a directory) can be found at the given path.
+// It returns false for directories even if they exist.
 func CheckFileExists(path string) bool {
 	fileInfo, err := os.Stat(path)
 	if err != nil {
