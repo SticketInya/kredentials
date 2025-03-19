@@ -74,6 +74,23 @@ func (m *KredentialManager) UseKredential(name string) error {
 	return nil
 }
 
+func (m *KredentialManager) RevertKredential() error {
+	lastConfig, err := m.configStore.Load(kubernetesConfigBackupFilename)
+	if err != nil {
+		return fmt.Errorf("loading last kubernetes config: %w", err)
+	}
+
+	if err = m.createKubernetesConfigBackup(); err != nil {
+		return err
+	}
+
+	if err = m.configStore.Store(kubernetesConfigFilename, *lastConfig); err != nil {
+		return fmt.Errorf("reverting kubernetes config: %w", err)
+	}
+
+	return nil
+}
+
 func (m *KredentialManager) createKubernetesConfigBackup() error {
 	currentConfig, err := m.configStore.Load(kubernetesConfigFilename)
 	if err != nil {
