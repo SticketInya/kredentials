@@ -17,22 +17,27 @@ type KredentialManager struct {
 	configStore storage.KubernetesConfigStore
 }
 
-func NewKredentialManager(kredentialStore storage.KredentialStore, configStore storage.KubernetesConfigStore) *KredentialManager {
+func NewKredentialManager(
+	kredentialStore storage.KredentialStore,
+	configStore storage.KubernetesConfigStore,
+) *KredentialManager {
 	return &KredentialManager{
 		kredStore:   kredentialStore,
 		configStore: configStore,
 	}
 }
 
-func (m *KredentialManager) AddKredential(name string, path string) error {
+func (m *KredentialManager) AddKredential(name string, path string, options models.AddKredentialOptions) error {
 	kredentials, err := m.ListKredentials()
 	if err != nil {
 		return err
 	}
 
-	for _, existing := range kredentials {
-		if name == existing.Name {
-			return ErrKredentialConflict{name}
+	if !options.OverwriteExisting {
+		for _, existing := range kredentials {
+			if name == existing.Name {
+				return ErrKredentialConflict{name}
+			}
 		}
 	}
 
