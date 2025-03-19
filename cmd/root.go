@@ -20,6 +20,7 @@ func NewRootCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	rootCmd.AddCommand(NewVersionCmd(cli))
 	rootCmd.AddCommand(NewRevertCmd(cli))
 	rootCmd.AddCommand(NewBackupCmd(cli))
+	rootCmd.AddCommand(NewRestoreCmd(cli))
 
 	return rootCmd
 }

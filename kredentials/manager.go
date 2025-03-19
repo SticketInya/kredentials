@@ -1,6 +1,7 @@
 package kredentials
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/SticketInya/kredentials/internal/fileutil"
@@ -114,6 +115,31 @@ func (m *KredentialManager) CreateKredentialBackup(path string) error {
 
 	if err = m.archiveStore.Store(expandedPath, kredentialBackupFilename, kredentials); err != nil {
 		return fmt.Errorf("creating archive: %w", err)
+	}
+
+	return nil
+}
+
+func (m *KredentialManager) RestoreKredentialBackup(path string) error {
+	expandedPath, err := fileutil.ExpandPath(path)
+	if err != nil {
+		return fmt.Errorf("expanding path '%s': %w", path, err)
+	}
+
+	kreds, err := m.archiveStore.Load(expandedPath)
+	if err != nil {
+		return fmt.Errorf("restoring from archive: %w", err)
+	}
+
+	errs := []error{}
+	for _, kred := range kreds {
+		if err := m.kredStore.Store(kred); err != nil {
+			errs = append(errs, fmt.Errorf("restoring kredential '%s': %w", kred.Name, err))
+		}
+	}
+
+	if len(errs) != 0 {
+		return fmt.Errorf("failed to restore kredentials: %w", errors.Join(errs...))
 	}
 
 	return nil
