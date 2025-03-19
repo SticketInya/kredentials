@@ -31,7 +31,6 @@ func NewZipArchiveStore(storageDirectoryPermissions os.FileMode) *ZipArchiveStor
 	}
 }
 
-// Store expects name to end with .zip
 func (s *ZipArchiveStore) Store(path string, name string, kredentials []*models.Kredential) error {
 	if err := fileutil.EnsureDirectory(path, s.storageDirPermissions); err != nil {
 		return fmt.Errorf("cannot create archive directory: %w", err)
