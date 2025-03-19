@@ -14,6 +14,7 @@ const (
 	defaultKubernetesStorageDir     string      = ".kube"
 	defaultStorageDirPermissions    os.FileMode = 0755
 	defaultKubernetesDirPermissions os.FileMode = 0755
+	defaultArchiveDirPermissions    os.FileMode = 0755
 
 	// Environment variables
 	kubernetesConfigCustomDirEnvKey string = "KUBECONFIG"
@@ -40,6 +41,7 @@ type KredentialsConfig struct {
 	kredentialStorageDirPermissions os.FileMode
 	kubernetesStorageDir            string
 	kubernetesStorageDirPermissions os.FileMode
+	archiveStorageDirPermissions    os.FileMode
 
 	versionConfig VersionConfig
 }
@@ -60,6 +62,7 @@ func NewKredentialsDefaultConfig(versionConfig VersionConfig) (*KredentialsConfi
 		kredentialStorageDirPermissions: defaultStorageDirPermissions,
 		kubernetesStorageDir:            kubernetesStorageDir,
 		kubernetesStorageDirPermissions: defaultKubernetesDirPermissions,
+		archiveStorageDirPermissions:    defaultArchiveDirPermissions,
 
 		versionConfig: versionConfig,
 	}, nil

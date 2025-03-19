@@ -18,7 +18,8 @@ type KredentialsCli struct {
 func NewKredentialsCli(config *KredentialsConfig) *KredentialsCli {
 	kredentialsStore := storage.NewFileKredentialStore(config.kredentialStorageDir, config.kredentialStorageDirPermissions)
 	kubernetesStore := storage.NewFileKubernetesConfigStore(config.kubernetesStorageDir, config.kubernetesStorageDirPermissions)
-	manager := NewKredentialManager(kredentialsStore, kubernetesStore)
+	archiveStore := storage.NewZipArchiveStore(config.archiveStorageDirPermissions)
+	manager := NewKredentialManager(kredentialsStore, kubernetesStore, archiveStore)
 	printer := formatter.NewStructuredPrinter(os.Stdout)
 
 	return &KredentialsCli{

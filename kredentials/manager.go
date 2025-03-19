@@ -3,6 +3,7 @@ package kredentials
 import (
 	"fmt"
 
+	"github.com/SticketInya/kredentials/internal/fileutil"
 	"github.com/SticketInya/kredentials/models"
 	"github.com/SticketInya/kredentials/storage"
 )
@@ -10,20 +11,24 @@ import (
 const (
 	kubernetesConfigFilename       string = "config"
 	kubernetesConfigBackupFilename string = "config.last"
+	kredentialBackupFilename       string = "kredential_backup"
 )
 
 type KredentialManager struct {
-	kredStore   storage.KredentialStore
-	configStore storage.KubernetesConfigStore
+	kredStore    storage.KredentialStore
+	configStore  storage.KubernetesConfigStore
+	archiveStore storage.ArchiveStore
 }
 
 func NewKredentialManager(
 	kredentialStore storage.KredentialStore,
 	configStore storage.KubernetesConfigStore,
+	archiveStore storage.ArchiveStore,
 ) *KredentialManager {
 	return &KredentialManager{
-		kredStore:   kredentialStore,
-		configStore: configStore,
+		kredStore:    kredentialStore,
+		configStore:  configStore,
+		archiveStore: archiveStore,
 	}
 }
 
@@ -91,6 +96,24 @@ func (m *KredentialManager) RevertKredential() error {
 
 	if err = m.configStore.Store(kubernetesConfigFilename, *lastConfig); err != nil {
 		return fmt.Errorf("reverting kubernetes config: %w", err)
+	}
+
+	return nil
+}
+
+func (m *KredentialManager) CreateKredentialBackup(path string) error {
+	kredentials, err := m.ListKredentials()
+	if err != nil {
+		return fmt.Errorf("collecting kredentials: %w", err)
+	}
+
+	expandedPath, err := fileutil.ExpandPath(path)
+	if err != nil {
+		return fmt.Errorf("extending path '%s': %w", path, err)
+	}
+
+	if err = m.archiveStore.Store(expandedPath, kredentialBackupFilename, kredentials); err != nil {
+		return fmt.Errorf("creating archive: %w", err)
 	}
 
 	return nil
