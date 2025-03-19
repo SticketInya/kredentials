@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	kubernetesConfigFilename string = "config"
+	kubernetesConfigFilename       string = "config"
+	kubernetesConfigBackupFilename string = "config.last"
 )
 
 type KredentialManager struct {
@@ -62,9 +63,27 @@ func (m *KredentialManager) UseKredential(name string) error {
 		return err
 	}
 
+	if err = m.createKubernetesConfigBackup(); err != nil {
+		return err
+	}
+
 	err = m.configStore.Store(kubernetesConfigFilename, *kred.Config)
 	if err != nil {
 		return fmt.Errorf("overwriting kubernetes config: %w", err)
 	}
+	return nil
+}
+
+func (m *KredentialManager) createKubernetesConfigBackup() error {
+	currentConfig, err := m.configStore.Load(kubernetesConfigFilename)
+	if err != nil {
+		return fmt.Errorf("loading current kubernetes configuration: %w", err)
+	}
+
+	err = m.configStore.Store(kubernetesConfigBackupFilename, *currentConfig)
+	if err != nil {
+		return fmt.Errorf("saving kubernetes config backup: %w", err)
+	}
+
 	return nil
 }
