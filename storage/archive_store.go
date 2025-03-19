@@ -45,6 +45,7 @@ func (s *ZipArchiveStore) Store(path string, name string, kredentials []*models.
 	defer archive.Close()
 
 	zipWriter := zip.NewWriter(archive)
+	defer zipWriter.Close()
 	for _, kred := range kredentials {
 		w, err := zipWriter.Create(kred.Name)
 		if err != nil {
