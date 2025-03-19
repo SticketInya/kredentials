@@ -1,9 +1,11 @@
 package kredentials
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/SticketInya/kredentials/formatter"
+	"github.com/SticketInya/kredentials/internal/fileutil"
 	"github.com/SticketInya/kredentials/storage"
 )
 
@@ -28,4 +30,16 @@ func NewKredentialsCli(config *KredentialsConfig) *KredentialsCli {
 
 func (cli *KredentialsCli) GetVersion() VersionConfig {
 	return cli.config.versionConfig
+}
+
+func (cli *KredentialsCli) Initialize() error {
+	if err := fileutil.EnsureDirectory(cli.config.kubernetesStorageDir, cli.config.kubernetesStorageDirPermissions); err != nil {
+		return fmt.Errorf("cannot initialize kredentials cli: %w", err)
+	}
+
+	if err := fileutil.EnsureDirectory(cli.config.kredentialStorageDir, cli.config.kredentialStorageDirPermissions); err != nil {
+		return fmt.Errorf("cannot initialize kredentials cli: %w", err)
+	}
+
+	return nil
 }
