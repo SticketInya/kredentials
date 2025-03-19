@@ -8,8 +8,17 @@ import (
 	"github.com/SticketInya/kredentials/kredentials"
 )
 
+// Set at build time
+var (
+	Version   = "dev"
+	Commit    = "none"
+	BuildDate = "unknown"
+)
+
 func main() {
-	cli := kredentials.NewKredentialsCli(kredentials.NewKredentialsDefaultConfig())
+	cli := kredentials.NewKredentialsCli(
+		kredentials.NewKredentialsDefaultConfig(kredentials.NewVersionConfig(Version, Commit, BuildDate)),
+	)
 	rootCmd := cmd.NewRootCmd(cli)
 
 	if err := rootCmd.Execute(); err != nil {

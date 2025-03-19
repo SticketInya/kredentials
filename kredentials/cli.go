@@ -25,3 +25,7 @@ func NewKredentialsCli(config *KredentialsConfig) *KredentialsCli {
 		Printer: printer,
 	}
 }
+
+func (cli *KredentialsCli) GetVersion() VersionConfig {
+	return cli.config.versionConfig
+}

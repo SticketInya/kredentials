@@ -17,6 +17,7 @@ func NewRootCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	rootCmd.AddCommand(NewListCmd(cli))
 	rootCmd.AddCommand(NewUseCommand(cli))
 	rootCmd.AddCommand(NewDeleteCmd(cli))
+	rootCmd.AddCommand(NewVersionCmd(cli))
 
 	return rootCmd
 }

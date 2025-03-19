@@ -59,7 +59,7 @@ tidy:
 .PHONY: build
 build:
     # Include additional build steps, like TypeScript, SCSS or Tailwind compilation here...
-	go build -o=/tmp/bin/${binary_name} ${main_package_path}
+	go build -ldflags="-X 'main.Version=v0.0.1' -X 'main.Commit=$(shell git rev-parse HEAD)' -X 'main.BuildDate=$(shell date -u)'" -o=/tmp/bin/${binary_name} ${main_package_path}
 
 ## run: run the  application
 .PHONY: run
