@@ -11,7 +11,7 @@ import (
 func NewUseCommand(cli *kredentials.KredentialsCli) *cobra.Command {
 	useCmd := &cobra.Command{
 		Use:     "use name",
-		Short:   "use the selected kredential as kubernetes config",
+		Short:   "Use the selected kredential as kubernetes config",
 		Args:    cobra.ExactArgs(1),
 		PreRunE: validateUseArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -29,7 +29,7 @@ func runUse(cli *kredentials.KredentialsCli, args []string) error {
 		return fmt.Errorf("setting active kubernetes config: %w", err)
 	}
 
-	cli.Printer.Printf("Now using '%s' as kubernetes config!\n", kredentialName)
+	cli.Printer.Printf("now using '%s' as kubernetes config!\n", kredentialName)
 	return nil
 }
 

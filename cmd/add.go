@@ -11,7 +11,7 @@ func NewAddCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	options := models.AddKredentialOptions{}
 	addCmd := &cobra.Command{
 		Use:     "add name path",
-		Short:   "add a new config file",
+		Short:   "Add a new kredential",
 		Args:    cobra.ExactArgs(2),
 		PreRunE: validateAddArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {

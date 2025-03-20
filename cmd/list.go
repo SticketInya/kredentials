@@ -9,7 +9,7 @@ import (
 func NewListCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	listCmd := &cobra.Command{
 		Use:   "list",
-		Short: "list all the kredentials",
+		Short: "List all the kredentials",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runList(cli)
@@ -26,7 +26,7 @@ func runList(cli *kredentials.KredentialsCli) error {
 	}
 
 	if len(kreds) == 0 {
-		cli.Printer.Println("No kredentials found")
+		cli.Printer.Println("no kredentials found")
 		return nil
 	}
 

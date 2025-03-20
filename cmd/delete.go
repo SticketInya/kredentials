@@ -10,7 +10,7 @@ func NewDeleteCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	deleteCmd := &cobra.Command{
 		Use:     "delete name",
 		Aliases: []string{"remove", "rm"},
-		Short:   "delete a kredential",
+		Short:   "Delete a kredential",
 		Args:    cobra.ExactArgs(1),
 		PreRunE: validateDeleteArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {

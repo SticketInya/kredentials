@@ -8,8 +8,8 @@ import (
 
 func NewRestoreCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	restoreCmd := &cobra.Command{
-		Use:     "restore",
-		Short:   "restore kredentials from a backup",
+		Use:     "restore path",
+		Short:   "Restore kredentials from a backup",
 		Args:    cobra.ExactArgs(1),
 		PreRunE: validateRestoreArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
