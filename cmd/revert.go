@@ -11,6 +11,7 @@ func NewRevertCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	revertCmd := &cobra.Command{
 		Use:   "revert",
 		Short: "Revert the configuration in use to the previous one",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return runRevert(cli)
 		},

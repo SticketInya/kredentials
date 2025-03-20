@@ -12,6 +12,8 @@ func NewRootCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 		Long:  "kredentials is a cli tool for managing kubernetes configs",
 		Run:   func(cmd *cobra.Command, args []string) {},
 	}
+	rootCmd.SilenceErrors = true
+	rootCmd.SilenceUsage = true
 
 	rootCmd.AddCommand(NewAddCmd(cli))
 	rootCmd.AddCommand(NewListCmd(cli))

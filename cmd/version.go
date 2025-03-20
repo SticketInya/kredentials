@@ -9,6 +9,7 @@ func NewVersionCmd(cli *kredentials.KredentialsCli) *cobra.Command {
 	versionCmd := &cobra.Command{
 		Use:   "version",
 		Short: "Print the application version information",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			runVersion(cli)
 		},

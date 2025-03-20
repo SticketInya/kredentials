@@ -1,6 +1,8 @@
 package kredentials
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type ErrKredentialConflict struct {
 	Name string
