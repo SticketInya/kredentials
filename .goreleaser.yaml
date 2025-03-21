@@ -1,0 +1,54 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: kredentials
+    main: ./main.go
+    binary: kredentials
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - "-X main.Version={{ .Version }}"
+      - "-X main.Commit={{ .Commit }}"
+      - "-X main.BuildDate={{ .CommitDate }}"
+    goos:
+      - darwin
+      # Operating systems other than MacOS are needed to be tested first
+      # before creating releases for them
+      # - linux
+      # - windows
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore"
+      - "^ci"
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+      - go mod tidy
+  groups:
+    - title: "New Features"
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: "Bug fixes"
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 10
+    - title: Other work
+      order: 999
+
+release:
+  draft: true
+  footer: >-
+
+    ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).

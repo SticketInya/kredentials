@@ -75,9 +75,12 @@ run: build
 push: confirm audit no-dirty
 	git push
 
-## production/deploy: deploy the application to production
-.PHONY: production/deploy
-production/deploy: confirm audit no-dirty
-	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=/tmp/bin/linux_amd64/${binary_name} ${main_package_path}
-	upx -5 /tmp/bin/linux_amd64/${binary_name}
-    # Include additional deployment steps here...}
+## release/local: create a local release
+.PHONY: release/local
+release/local: 
+	goreleaser release --snapshot --clean
+
+## release/check: validate the release file
+.PHONY: release/check
+release/check:
+	goreleaser check
