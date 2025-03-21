@@ -1,12 +1,5 @@
 name: Version Release
-on:
-  workflow_dispatch:
-    inputs:
-        run-audit:
-            description: 'Run tests and checks on release branch'
-            required: false
-            type: 'boolean'
-            default: true
+on: [workflow_dispatch]
 
 permissions:
   contents: write
@@ -25,10 +18,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.24.1
-
-      - name: Audit
-        if: "${{github.event.inputs.run-audit == 'true'}}"
-        uses: ./.github/workflows/audit.yaml
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
