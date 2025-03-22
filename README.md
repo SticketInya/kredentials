@@ -13,7 +13,7 @@ Kredentials is a simple CLI tool for managing Kubernetes config files. It makes 
 To install `kredentials`, simply run:
 
 ```shell
-    curl -sS https://raw.githubusercontent.com/SticketInya/kredentials/main/install.sh | bash
+curl -sS https://raw.githubusercontent.com/SticketInya/kredentials/main/install.sh | bash
 ```
 
 ### Option 2: Manual install
