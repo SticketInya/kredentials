@@ -18,7 +18,7 @@ curl -sS https://raw.githubusercontent.com/SticketInya/kredentials/main/install.
 
 ### Option 2: Manual install
 1. Download the appropriate archive for your system from the [releases page](https://github.com/SticketInya/kredentials/releases/).
-2. Extract the archive: `tar xzf kredentials_X.Y.Z_OS_ARCH.tar.gz`
+2. Extract the archive: `tar -xzf kredentials_X.Y.Z_OS_ARCH.tar.gz`
 3. Make the binary executable: `chmod +x kredentials`
 4. Move to your PATH: `sudo mv kredentials /usr/local/bin/`
 
