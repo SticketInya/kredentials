@@ -17,7 +17,7 @@ cd $TMP_DIR
 # Download latest release
 echo "Downloading latest $CLI_NAME..."
 DOWNLOAD_URL="https://github.com/$GITHUB_REPO/releases/latest/download/${CLI_NAME}_${OS}_${ARCH}.tar.gz"
-curl -sL "$DOWNLOAD_URL" -o "${CLI_NAME}.tar.gz"
+curl -q --progress-bar -sL "$DOWNLOAD_URL" -o "${CLI_NAME}.tar.gz"
 
 # Extract and install
 echo "Extracting archive..."
