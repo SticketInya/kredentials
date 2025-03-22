@@ -1,6 +1,6 @@
 # Kredentials
-[![Version](https://img.shields.io/github/v/release/SticketInya/kredentials?include_prereleases&sort=semver)](https://github.com/SticketInya/kredentials/releases)
-[![License](https://img.shields.io/github/license/SticketInya/kredentials)](https://github.com/SticketInya/kredentials/blob/main/LICENSE)
+[![Version](https://img.shields.io/github/v/release/sticketinya/kredentials?include_prereleases&sort=semver)](https://github.com/sticketinya/kredentials/releases)
+[![License](https://img.shields.io/github/license/sticketinya/kredentials)](https://github.com/sticketinya/kredentials/blob/main/LICENSE)
 
 Kredentials is a simple CLI tool for managing Kubernetes config files. It makes it easy to backup, restore, and switch between different Kubernetes configurations, helping developers and operators streamline their cluster management workflow.
 
