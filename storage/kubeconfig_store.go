@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -9,6 +10,15 @@ import (
 	"github.com/SticketInya/kredentials/internal/fileutil"
 	"github.com/SticketInya/kredentials/internal/kubernetesutil"
 	"github.com/SticketInya/kredentials/models"
+)
+
+var (
+	ErrKubernetesConfigInvalid    = errors.New("invalid kubernetes config")
+	ErrKubernetesConfigNotFound   = errors.New("kubernetes config not found")
+	ErrKubernetesConfigAccess     = errors.New("kubernetes config file access error")
+	ErrKubernetesConfigIsDir      = errors.New("expected file but got directory")
+	ErrKubernetesConfigCannotOpen = errors.New("cannot open kubernetes config file")
+	ErrKubernetesConfigCannotRead = errors.New("cannot read kubernetes config file")
 )
 
 type KubernetesConfigStore interface {
@@ -32,7 +42,7 @@ func NewFileKubernetesConfigStore(storageDirectory string, storageDirPermissions
 func (s *FileKubernetesConfigStore) getAndExpandStorageDirectory() (string, error) {
 	destDir, err := fileutil.ExpandPath(s.storageDirectory)
 	if err != nil {
-		return "", fmt.Errorf("expanding kubernetes directory: %w", err)
+		return "", fmt.Errorf("%w expanding kubernetes directory: %v", ErrKubernetesConfigAccess, err)
 	}
 
 	return destDir, nil
@@ -72,7 +82,7 @@ func (s *FileKubernetesConfigStore) loadFileAndParse(filename string) (*models.K
 
 	data, err := io.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("reading file content '%s': %w", filename, err)
+		return nil, fmt.Errorf("reading file '%s': %w", filename, err)
 	}
 
 	return kubernetesutil.ReadKubernetesConfig(data)
@@ -87,25 +97,46 @@ func (s *FileKubernetesConfigStore) Load(name string) (*models.KubernetesConfig,
 	filename := filepath.Join(storageDir, name)
 	info, err := os.Stat(filename)
 	if err != nil {
-		return nil, fmt.Errorf("file '%s' does not exists", filename)
+		return nil, fmt.Errorf("%w: '%s'", ErrKubernetesConfigNotFound, filename)
 	}
 
 	if info.IsDir() {
-		return nil, fmt.Errorf("file '%s' is a directory", filename)
+		return nil, fmt.Errorf("%w: '%s'", ErrKubernetesConfigIsDir, filename)
 	}
 
-	return s.loadFileAndParse(filename)
+	config, err := s.loadFileAndParse(filename)
+	if err != nil {
+		switch {
+		case errors.Is(err, os.ErrPermission):
+			return nil, err
+		default:
+			return nil, fmt.Errorf("%w: %v", ErrKubernetesConfigInvalid, err)
+		}
+	}
+
+	return config, nil
 }
 
 func (s *FileKubernetesConfigStore) LoadFromPath(path string) (*models.KubernetesConfig, error) {
 	targetPath, err := fileutil.ExpandPath(path)
 	if err != nil {
-		return nil, fmt.Errorf("expanding target path '%s':%w", path, err)
+		return nil, fmt.Errorf("%w expanding path '%s':%v", ErrKubernetesConfigAccess, path, err)
 	}
 
 	if !fileutil.CheckFileExists(targetPath) {
-		return nil, fmt.Errorf("file '%s' does not exists", targetPath)
+		return nil, fmt.Errorf("%w: '%s'", ErrKubernetesConfigNotFound, targetPath)
 	}
 
-	return s.loadFileAndParse(targetPath)
+	config, err := s.loadFileAndParse(targetPath)
+	if err != nil {
+		switch {
+		case errors.Is(err, ErrKubernetesConfigCannotOpen):
+		case errors.Is(err, ErrKubernetesConfigCannotRead):
+			return nil, fmt.Errorf("%w: '%s'", err, targetPath)
+		default:
+			return nil, fmt.Errorf("%w: %v", ErrKubernetesConfigInvalid, err)
+		}
+	}
+
+	return config, nil
 }
