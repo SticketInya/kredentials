@@ -16,11 +16,6 @@ const (
 	zipeArchiveExtension string = ".zip"
 )
 
-type ArchiveStore interface {
-	Store(path string, name string, kredentials []*models.Kredential) error
-	Load(path string) ([]*models.Kredential, error)
-}
-
 type ZipArchiveStore struct {
 	storageDirPermissions os.FileMode
 }

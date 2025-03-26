@@ -11,13 +11,6 @@ import (
 	"github.com/SticketInya/kredentials/models"
 )
 
-type KredentialStore interface {
-	Store(kred *models.Kredential) error
-	Load(name string) (*models.Kredential, error)
-	List() ([]*models.Kredential, error)
-	Delete(name string) error
-}
-
 type FileKredentialStore struct {
 	storageDirectory      string
 	storageDirPermissions os.FileMode

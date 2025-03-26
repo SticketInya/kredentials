@@ -21,12 +21,6 @@ var (
 	ErrKubernetesConfigCannotRead = errors.New("cannot read kubernetes config file")
 )
 
-type KubernetesConfigStore interface {
-	Store(name string, config models.KubernetesConfig) error
-	Load(name string) (*models.KubernetesConfig, error)
-	LoadFromPath(path string) (*models.KubernetesConfig, error)
-}
-
 type FileKubernetesConfigStore struct {
 	storageDirectory      string
 	storageDirPermissions os.FileMode

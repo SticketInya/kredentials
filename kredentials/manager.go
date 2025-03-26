@@ -6,7 +6,6 @@ import (
 
 	"github.com/SticketInya/kredentials/internal/fileutil"
 	"github.com/SticketInya/kredentials/models"
-	"github.com/SticketInya/kredentials/storage"
 )
 
 const (
@@ -16,15 +15,15 @@ const (
 )
 
 type KredentialManager struct {
-	kredStore    storage.KredentialStore
-	configStore  storage.KubernetesConfigStore
-	archiveStore storage.ArchiveStore
+	kredStore    KredentialStore
+	configStore  KubernetesConfigStore
+	archiveStore ArchiveStore
 }
 
 func NewKredentialManager(
-	kredentialStore storage.KredentialStore,
-	configStore storage.KubernetesConfigStore,
-	archiveStore storage.ArchiveStore,
+	kredentialStore KredentialStore,
+	configStore KubernetesConfigStore,
+	archiveStore ArchiveStore,
 ) *KredentialManager {
 	return &KredentialManager{
 		kredStore:    kredentialStore,
