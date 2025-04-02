@@ -63,7 +63,7 @@ func (s *ZipArchiveStore) Load(path string) ([]*models.Kredential, error) {
 	}
 	defer zipReader.Close()
 
-	kreds := []*models.Kredential{}
+	kreds := make([]*models.Kredential, len(zipReader.File))
 	for _, file := range zipReader.File {
 		scan, err := file.Open()
 		if err != nil {

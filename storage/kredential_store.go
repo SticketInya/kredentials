@@ -39,7 +39,7 @@ func (s *FileKredentialStore) Store(kred *models.Kredential) error {
 	}
 
 	// ensure the directory exists
-	if err = os.MkdirAll(storageDir, s.storageDirPermissions); err != nil {
+	if err := os.MkdirAll(storageDir, s.storageDirPermissions); err != nil {
 		return fmt.Errorf("creating storage directory: %w", err)
 	}
 
@@ -137,7 +137,7 @@ func (s *FileKredentialStore) Delete(name string) error {
 	}
 
 	filename := filepath.Join(storageDir, name)
-	if err = os.Remove(filename); err != nil {
+	if err := os.Remove(filename); err != nil {
 		return fmt.Errorf("deleting file '%s': %w", filename, err)
 	}
 

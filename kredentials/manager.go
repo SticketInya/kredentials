@@ -73,7 +73,7 @@ func (m *KredentialManager) UseKredential(name string) error {
 		return err
 	}
 
-	if err = m.createKubernetesConfigBackup(); err != nil {
+	if err := m.createKubernetesConfigBackup(); err != nil {
 		return err
 	}
 
@@ -90,11 +90,11 @@ func (m *KredentialManager) RevertKredential() error {
 		return fmt.Errorf("loading last kubernetes config: %w", err)
 	}
 
-	if err = m.createKubernetesConfigBackup(); err != nil {
+	if err := m.createKubernetesConfigBackup(); err != nil {
 		return err
 	}
 
-	if err = m.configStore.Store(kubernetesConfigFilename, *lastConfig); err != nil {
+	if err := m.configStore.Store(kubernetesConfigFilename, *lastConfig); err != nil {
 		return fmt.Errorf("reverting kubernetes config: %w", err)
 	}
 
@@ -112,7 +112,7 @@ func (m *KredentialManager) CreateKredentialBackup(path string) error {
 		return fmt.Errorf("extending path '%s': %w", path, err)
 	}
 
-	if err = m.archiveStore.Store(expandedPath, kredentialBackupFilename, kredentials); err != nil {
+	if err := m.archiveStore.Store(expandedPath, kredentialBackupFilename, kredentials); err != nil {
 		return fmt.Errorf("creating archive: %w", err)
 	}
 

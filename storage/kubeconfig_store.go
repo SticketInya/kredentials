@@ -49,7 +49,7 @@ func (s *FileKubernetesConfigStore) Store(name string, config models.KubernetesC
 	}
 
 	// ensure the directory exists
-	if err = os.MkdirAll(storageDir, s.storageDirPermissions); err != nil {
+	if err := os.MkdirAll(storageDir, s.storageDirPermissions); err != nil {
 		return fmt.Errorf("creating kubernetes directory: %w", err)
 	}
 
