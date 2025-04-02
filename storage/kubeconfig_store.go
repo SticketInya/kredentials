@@ -124,8 +124,7 @@ func (s *FileKubernetesConfigStore) LoadFromPath(path string) (*models.Kubernete
 	config, err := s.loadFileAndParse(targetPath)
 	if err != nil {
 		switch {
-		case errors.Is(err, ErrKubernetesConfigCannotOpen):
-		case errors.Is(err, ErrKubernetesConfigCannotRead):
+		case errors.Is(err, os.ErrPermission):
 			return nil, fmt.Errorf("%w: '%s'", err, targetPath)
 		default:
 			return nil, fmt.Errorf("%w: %v", ErrKubernetesConfigInvalid, err)
