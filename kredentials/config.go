@@ -12,9 +12,9 @@ const (
 	defaultKredentialDir            string      = ".kredentials"
 	defaultKredentialStorageDir     string      = "configs"
 	defaultKubernetesStorageDir     string      = ".kube"
-	defaultStorageDirPermissions    os.FileMode = 0755
-	defaultKubernetesDirPermissions os.FileMode = 0755
-	defaultArchiveDirPermissions    os.FileMode = 0755
+	defaultStorageDirPermissions    os.FileMode = 0o755
+	defaultKubernetesDirPermissions os.FileMode = 0o755
+	defaultArchiveDirPermissions    os.FileMode = 0o755
 
 	// Environment variables
 	kubernetesConfigCustomDirEnvKey string = "KUBECONFIG"

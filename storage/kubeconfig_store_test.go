@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	defaultDirectoryPermission os.FileMode = 0755
+	defaultDirectoryPermission os.FileMode = 0o755
 )
 
 var (
@@ -88,7 +88,7 @@ func TestFileKubernetesConfigStore_Store(t *testing.T) {
 		for _, tc := range testCases {
 			tempDir := t.TempDir()
 			unwritableDir := filepath.Join(tempDir, "unwritable")
-			if err := os.Mkdir(unwritableDir, 0500); err != nil {
+			if err := os.Mkdir(unwritableDir, 0o500); err != nil {
 				t.Fatal(err)
 			}
 
@@ -147,7 +147,7 @@ func TestFileKubernetestConfigStore_Load(t *testing.T) {
 			store := storage.NewFileKubernetesConfigStore(tempDir, defaultDirectoryPermission)
 			assert.NoError(t, store.Store(tc.configName, tc.config))
 
-			os.Chmod(filepath.Join(tempDir, tc.configName), 0333)
+			os.Chmod(filepath.Join(tempDir, tc.configName), 0o333)
 
 			_, err := store.Load(tc.configName)
 			assert.Error(t, err, os.ErrPermission)
@@ -279,7 +279,7 @@ func TestFileKubernetesConfigStore_LoadFromPath(t *testing.T) {
 
 			assert.NoError(t, os.MkdirAll(filepath.Dir(actualPath), defaultDirectoryPermission))
 			assert.NoError(t, store.Store(tc.path, tc.config))
-			assert.NoError(t, os.Chmod(actualPath, 0333))
+			assert.NoError(t, os.Chmod(actualPath, 0o333))
 
 			_, err := store.LoadFromPath(actualPath)
 			assert.Error(t, err, os.ErrPermission)
